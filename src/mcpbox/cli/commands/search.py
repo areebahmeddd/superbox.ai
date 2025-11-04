@@ -1,4 +1,4 @@
-"""Search for MCP servers"""
+"""Search for MCP server in registry"""
 
 from pathlib import Path
 import sys
@@ -10,8 +10,7 @@ from mcpbox.shared.config import Config, load_env
 
 
 @click.command()
-@click.option("--bucket", "-b", help="S3 bucket name (reads from .env if not provided)")
-def search(bucket: str | None) -> None:
+def search() -> None:
     """Search for available MCP servers"""
     try:
         env_path = Path.cwd() / ".env"
@@ -22,8 +21,7 @@ def search(bucket: str | None) -> None:
         load_env(env_path)
         cfg = Config()
 
-        if not bucket:
-            bucket = cfg.S3_BUCKET_NAME
+        bucket = cfg.S3_BUCKET_NAME
 
         if not bucket:
             click.echo("Error: S3_BUCKET_NAME not found in .env file or --bucket option")

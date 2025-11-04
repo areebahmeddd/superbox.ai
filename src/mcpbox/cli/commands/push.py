@@ -1,4 +1,4 @@
-"""Push MCP server to registry with security analysis"""
+"""Push MCP server to registry"""
 
 import json
 from datetime import datetime
@@ -18,20 +18,10 @@ from mcpbox.shared.config import Config, load_env
 
 @click.command()
 @click.option("--name", "-n", help="MCP server name (reads from mcpbox.json if not provided)")
-@click.option("--repo-url", "-r", help="Repository URL (reads from mcpbox.json if not provided)")
-@click.option("--bucket", "-b", help="S3 bucket name (reads from .env if not provided)")
 @click.option("--force", "-f", is_flag=True, help="Force overwrite if server exists")
-@click.option(
-    "--env-path",
-    type=click.Path(exists=True),
-    help="Path to .env file (defaults to current directory)",
-)
 def push(
     name: str | None,
-    repo_url: str | None,
-    bucket: str | None,
     force: bool,
-    env_path: str | None,
 ) -> None:
     """Push MCP server to registry with security scanning"""
     try:
@@ -40,11 +30,6 @@ def push(
         if config_file.exists():
             with open(config_file, "r") as f:
                 config = json.load(f)
-
-        if not repo_url:
-            repo_url = config.get("repo_url")
-            if repo_url:
-                click.echo(f"Using repo URL from config: {repo_url}")
 
         if not name:
             name = config.get("name")
@@ -63,8 +48,7 @@ def push(
         load_env(env_path)
         cfg = Config()
 
-        if not bucket:
-            bucket = cfg.S3_BUCKET_NAME
+        bucket = cfg.S3_BUCKET_NAME
 
         if not bucket:
             click.echo("Error: S3_BUCKET_NAME not found in .env file or --bucket option")
@@ -85,8 +69,13 @@ def push(
             if not click.confirm("Continue anyway?"):
                 sys.exit(1)
 
+        repo_url = None
+        if isinstance(config.get("repository"), dict):
+            repo_url = config.get("repository", {}).get("url")
+        if not repo_url and config.get("repo_url"):
+            repo_url = config.get("repo_url")
         if not repo_url:
-            click.echo("Error: --repo-url required (or create mcpbox.json with 'mcpbox init')")
+            click.echo("Error: repository URL not found in mcpbox.json under 'repository.url'")
             sys.exit(1)
 
         click.echo(f"Pushing server: {name}")

@@ -1,4 +1,4 @@
-"""Pull MCP server from registry to VS Code"""
+"""Pull MCP server from registry"""
 
 import json
 from pathlib import Path
@@ -13,8 +13,7 @@ from mcpbox.shared.config import Config, load_env
 
 @click.command()
 @click.option("--name", "-n", required=True, help="MCP server name to pull")
-@click.option("--bucket", "-b", help="S3 bucket name (reads from .env if not provided)")
-def pull(name: str, bucket: str | None) -> None:
+def pull(name: str) -> None:
     """Pull and configure MCP server from registry"""
     try:
         env_path = Path.cwd() / ".env"
@@ -30,10 +29,9 @@ def pull(name: str, bucket: str | None) -> None:
             click.echo("Add to .env: LAMBDA_BASE_URL=https://your-lambda-url.amazonaws.com")
             sys.exit(1)
 
-        click.echo(f"\nFetching server '{name}' from S3 bucket '{bucket}'...")
+        bucket = cfg.S3_BUCKET_NAME
 
-        if not bucket:
-            bucket = cfg.S3_BUCKET_NAME
+        click.echo(f"\nFetching server '{name}' from S3 bucket '{bucket}'...")
 
         if not bucket:
             click.echo("Error: S3_BUCKET_NAME not found in .env file or --bucket option")
