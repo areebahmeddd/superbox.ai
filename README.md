@@ -23,6 +23,7 @@ For setup and deployment, see [docs/INSTALL.md](docs/INSTALL.md).
 - **Security Pipeline (5‑step)**: SonarQube, Bandit, and GitGuardian checks with a unified report.
 - **One‑Command Publish**: `mcpbox push` scans, discovers tools, and uploads a unified record to S3.
 - **Client Auto‑Config**: `mcpbox pull --client cursor|vscode|...` writes correct MCP config pointing to the Lambda endpoint.
+- **Terminal Runner**: `mcpbox run --name <server>` starts an interactive prompt against the Lambda executor.
 - **Tool Discovery**: Regex‑based discovery across Python code and optional Node `package.json` definitions.
 - **HTTP API**: FastAPI routes for listing, fetching, and creating MCP records; health check and Swagger docs.
 - **Razorpay Payments**: Required payment flow to create/verify orders and fetch payment status.

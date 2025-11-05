@@ -105,6 +105,13 @@ mcpbox pull --name <server-name> --client cursor
 # Supported clients: vscode | cursor | windsurf | claude | chatgpt
 ```
 
+Run a server interactively from the terminal:
+
+```powershell
+mcpbox run --name <server-name>
+# Type your prompt at "> ", e.g., "What's the weather today?" and view the response
+```
+
 Search available servers:
 
 ```powershell

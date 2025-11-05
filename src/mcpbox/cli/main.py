@@ -5,6 +5,7 @@ import click
 from mcpbox.cli.commands.init import init
 from mcpbox.cli.commands.push import push
 from mcpbox.cli.commands.pull import pull
+from mcpbox.cli.commands.run import run
 from mcpbox.cli.commands.search import search
 from mcpbox.cli.commands.inspect import inspect
 
@@ -20,6 +21,7 @@ def cli():
 cli.add_command(init)
 cli.add_command(push)
 cli.add_command(pull)
+cli.add_command(run)
 cli.add_command(search)
 cli.add_command(inspect)
 
