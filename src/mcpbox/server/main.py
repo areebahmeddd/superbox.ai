@@ -50,7 +50,7 @@ async def health():
         try:
             s3 = s3_client()
             try:
-                s3.head_object(Bucket=cfg.S3_BUCKET_NAME, Key=cfg.S3_METADATA_KEY)
+                s3.list_objects_v2(Bucket=cfg.S3_BUCKET_NAME, MaxKeys=1)
                 registry_ok = True
             except Exception:
                 registry_ok = False
