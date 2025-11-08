@@ -4,6 +4,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.parse
 import urllib.request
 import zipfile
 
@@ -31,7 +32,22 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         mcp_name = extract_name(event)
         print(f"Request received: {mcp_name}")
 
-        metadata = fetch_meta(mcp_name)
+        query_params = event.get("queryStringParameters") or {}
+        is_test_mode = query_params.get("test_mode", "").lower() == "true"
+        repo_url = query_params.get("repo_url")
+        entrypoint = query_params.get("entrypoint", "main.py")
+        lang = query_params.get("lang", "python")
+
+        if is_test_mode and repo_url:
+            repo_url = urllib.parse.unquote(repo_url)
+            print(f"Test mode: Using direct repo URL {repo_url}")
+            metadata = {
+                "repository": {"url": repo_url},
+                "entrypoint": entrypoint,
+                "lang": lang,
+            }
+        else:
+            metadata = fetch_meta(mcp_name)
 
         repo_dir = clone_repo(metadata["repository"]["url"], mcp_name)
         print(f"Repository ready: {repo_dir}")

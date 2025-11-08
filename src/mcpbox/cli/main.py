@@ -8,6 +8,7 @@ from mcpbox.cli.commands.pull import pull
 from mcpbox.cli.commands.run import run
 from mcpbox.cli.commands.search import search
 from mcpbox.cli.commands.inspect import inspect
+from mcpbox.cli.commands.test import test
 
 
 @click.group()
@@ -24,6 +25,7 @@ cli.add_command(pull)
 cli.add_command(run)
 cli.add_command(search)
 cli.add_command(inspect)
+cli.add_command(test)
 
 
 def main():
