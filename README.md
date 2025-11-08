@@ -29,7 +29,7 @@ For setup and deployment, see [docs/INSTALL.md](docs/INSTALL.md).
 - **Razorpay Payments**: Required payment flow to create/verify orders and fetch payment status.
 - **Lambda Executor**: Fetch repo ZIP, install deps to `/tmp`, run entrypoint, and stream response.
 
-> NOTE: The Lambda executor currently supports Python MCP servers. Additional runtimes are WORK IN PROGRESS.
+> NOTE: The Lambda executor currently supports Python + Npm MCP servers.
 
 ## 🗂️ Project Structure
 
@@ -64,6 +64,8 @@ Base path: `/api/v1`
   - `GET /servers` – list all servers
   - `GET /servers/{name}` – get a server by name
   - `POST /servers` – create a server (see schemas in `mcpbox.shared.models`)
+  - `PUT /servers/{name}` – update an existing server (partial updates supported)
+  - `DELETE /servers/{name}` – remove a server from the registry
 
 - **Payment**
 

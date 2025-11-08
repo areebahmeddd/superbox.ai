@@ -19,6 +19,7 @@ def extract_repository(repo_url):
         repo_url = repo_url.replace("git@github.com:", "")
     elif "github.com/" in repo_url:
         repo_url = repo_url.split("github.com/")[-1]
+
     repo_url = repo_url.replace(".git", "")
     parts = repo_url.split("/")
     if len(parts) >= 2:
@@ -241,12 +242,6 @@ def run_analysis(repo_url, env_path=None):
     cfg = Config()
     SONAR_TOKEN = cfg.SONAR_TOKEN
     SONAR_ORGANIZATION = cfg.SONAR_ORGANIZATION
-
-    if not SONAR_TOKEN:
-        raise ValueError("Error: SONAR_TOKEN not found in .env file")
-
-    if not SONAR_ORGANIZATION:
-        raise ValueError("Error: SONAR_ORGANIZATION not found in .env file")
 
     print("[Sonar] Starting analysis")
     owner, repo = extract_repository(repo_url)

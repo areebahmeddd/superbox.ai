@@ -59,6 +59,7 @@ def push(
                     sys.exit(0)
                 if force:
                     click.echo("Force flag set, will overwrite existing server")
+
         except Exception as e:
             click.echo(f"Warning: Could not check S3 bucket: {str(e)}")
             if not click.confirm("Continue anyway?"):
