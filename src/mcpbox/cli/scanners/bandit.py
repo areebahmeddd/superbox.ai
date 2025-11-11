@@ -1,9 +1,7 @@
-"""Bandit Security Scanner"""
-
-import json
 import os
-import subprocess
+import json
 import tempfile
+import subprocess
 from datetime import datetime
 from typing import Any, Dict
 

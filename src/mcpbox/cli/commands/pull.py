@@ -1,8 +1,6 @@
-"""Pull MCP server from registry"""
-
+import sys
 import json
 from pathlib import Path
-import sys
 
 import click
 
@@ -29,6 +27,7 @@ def pull(name: str, client: str) -> None:
 
         load_env(env_path)
         cfg = Config()
+
         lambda_base_url = cfg.LAMBDA_BASE_URL
         if not lambda_base_url:
             click.echo("Error: LAMBDA_BASE_URL not found in .env file")
@@ -48,7 +47,6 @@ def pull(name: str, client: str) -> None:
             sys.exit(1)
 
         server_data = servers[name]
-
         target = client.lower()
 
         path = config_path(target)
@@ -108,7 +106,4 @@ def pull(name: str, client: str) -> None:
 
     except Exception as e:
         click.echo(f"\nError: {str(e)}")
-        import traceback
-
-        traceback.print_exc()
         sys.exit(1)

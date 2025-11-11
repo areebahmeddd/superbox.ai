@@ -1,7 +1,5 @@
-"""Search for MCP server in registry"""
-
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import click
 

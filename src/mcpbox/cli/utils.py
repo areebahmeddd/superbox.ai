@@ -1,9 +1,5 @@
-"""
-Shared CLI utilities
-"""
-
-from datetime import datetime
 from pathlib import Path
+from datetime import datetime
 from typing import Any, Dict
 
 import os

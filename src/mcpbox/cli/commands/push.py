@@ -1,10 +1,8 @@
-"""Push MCP server to registry"""
-
-import json
-from pathlib import Path
-import shutil
 import sys
+import json
+import shutil
 import tempfile
+from pathlib import Path
 
 import click
 
@@ -75,7 +73,6 @@ def push(
             sys.exit(1)
 
         click.echo(f"Pushing server: {name}")
-
         click.echo("Running SonarCloud analysis...")
 
         try:
@@ -147,10 +144,7 @@ def push(
             click.echo("Push complete")
 
         except Exception as e:
-            click.echo(f"\nError: {str(e)}")
-            import traceback
-
-            traceback.print_exc()
+            click.echo(f"\nError: {e}")
             sys.exit(1)
 
     except Exception as e:

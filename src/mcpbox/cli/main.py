@@ -1,5 +1,3 @@
-"""MCP Box CLI - Main Entry Point"""
-
 import click
 
 from mcpbox.cli.commands.init import init

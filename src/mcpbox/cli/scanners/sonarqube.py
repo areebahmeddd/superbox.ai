@@ -1,11 +1,9 @@
-"""SonarQube Scanner"""
-
 import os
 import re
-import shutil
-import subprocess
-import tempfile
 import time
+import shutil
+import tempfile
+import subprocess
 from datetime import datetime
 
 import requests
@@ -37,18 +35,20 @@ def create_project(project_key, project_name, sonar_host, sonar_token, sonar_org
     url = f"{sonar_host}/api/projects/create"
     params = {"organization": sonar_org, "project": project_key, "name": project_name}
     headers = {"Authorization": f"Bearer {sonar_token}"}
+
     try:
         response = requests.post(url, params=params, headers=headers, timeout=30)
         if response.status_code == 200:
             return True
-        elif response.status_code == 400:
+
+        if response.status_code == 400:
             error_msg = response.text.lower()
             if "already exists" in error_msg or "already" in error_msg:
                 return True
-            else:
-                return False
-        else:
+
             return False
+
+        return False
     except requests.exceptions.RequestException:
         return False
 
@@ -59,6 +59,7 @@ def clone_repository(repo_url, target_dir):
     )
     if result.returncode != 0:
         return False
+
     return True
 
 
@@ -82,6 +83,7 @@ def run_scanner(repo_path, project_key, sonar_host, sonar_token, sonar_org):
         )
         if result.returncode != 0:
             return False
+
         return True
     except subprocess.TimeoutExpired:
         return False
@@ -102,6 +104,7 @@ def wait_analysis(project_key, sonar_host, sonar_token, max_wait=60):
                 if data.get("queue"):
                     time.sleep(3)
                     continue
+
                 current = data.get("current")
                 if current:
                     status = current.get("status")
@@ -114,9 +117,11 @@ def wait_analysis(project_key, sonar_host, sonar_token, max_wait=60):
                         return False
                 else:
                     return True
+
             time.sleep(3)
         except Exception:
             time.sleep(3)
+
     return True
 
 
@@ -132,15 +137,18 @@ def fetch_issues(project_key, sonar_host, sonar_token):
             response = requests.get(url, params=params, headers=headers, timeout=30)
             if response.status_code != 200:
                 break
+
             data = response.json()
             issues = data.get("issues", [])
             all_issues.extend(issues)
             total = data.get("total", 0)
             if len(all_issues) >= total or len(issues) < page_size:
                 break
+
             page += 1
         except Exception:
             break
+
     return all_issues
 
 
@@ -156,6 +164,7 @@ def fetch_hotspots(project_key, sonar_host, sonar_token):
             response = requests.get(url, params=params, headers=headers, timeout=30)
             if response.status_code != 200:
                 break
+
             data = response.json()
             hotspots = data.get("hotspots", [])
             all_hotspots.extend(hotspots)
@@ -163,9 +172,11 @@ def fetch_hotspots(project_key, sonar_host, sonar_token):
             total = paging.get("total", 0)
             if len(all_hotspots) >= total or len(hotspots) < page_size:
                 break
+
             page += 1
         except Exception:
             break
+
     return all_hotspots
 
 
@@ -190,6 +201,7 @@ def fetch_measures(project_key, sonar_host, sonar_token):
         response = requests.get(url, params=params, headers=headers, timeout=30)
         if response.status_code != 200:
             return {}
+
         data = response.json()
         component = data.get("component", {})
         measures = component.get("measures", [])
@@ -198,6 +210,7 @@ def fetch_measures(project_key, sonar_host, sonar_token):
             metric = measure.get("metric")
             value = measure.get("value")
             metrics[metric] = value
+
         return metrics
     except Exception:
         return {}
@@ -240,6 +253,7 @@ def run_analysis(repo_url, env_path=None):
 
     SONAR_HOST = "https://sonarcloud.io"
     cfg = Config()
+
     SONAR_TOKEN = cfg.SONAR_TOKEN
     SONAR_ORGANIZATION = cfg.SONAR_ORGANIZATION
 

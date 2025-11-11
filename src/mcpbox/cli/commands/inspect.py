@@ -1,5 +1,3 @@
-"""Inspect MCP server and open repository URL in browser"""
-
 import sys
 import webbrowser
 from pathlib import Path

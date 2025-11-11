@@ -1,5 +1,5 @@
-import json
 import sys
+import json
 from pathlib import Path
 from urllib.parse import quote
 
@@ -10,6 +10,7 @@ from mcpbox.shared.config import Config, load_env
 
 
 def get_repo(repo_url: str) -> str:
+    """Extract repository name from URL"""
     repo_url = repo_url.strip().rstrip("/")
 
     if repo_url.startswith("git@github.com:"):
@@ -36,6 +37,7 @@ def get_repo(repo_url: str) -> str:
 @click.option("--entrypoint", default="main.py", help="Entrypoint file (default: main.py)")
 @click.option("--lang", default="python", help="Language (default: python)")
 def test(url: str, client: str, entrypoint: str, lang: str) -> None:
+    """Test MCP server directly from repository URL without S3 registration or security checks"""
     try:
         env_path = Path.cwd() / ".env"
         if not env_path.exists():
@@ -121,7 +123,4 @@ def test(url: str, client: str, entrypoint: str, lang: str) -> None:
 
     except Exception as e:
         click.echo(f"\nError: {str(e)}")
-        import traceback
-
-        traceback.print_exc()
         sys.exit(1)

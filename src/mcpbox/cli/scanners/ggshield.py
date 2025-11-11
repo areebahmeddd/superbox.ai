@@ -1,7 +1,5 @@
-"""GitGuardian Secret Scanner"""
-
-import json
 import os
+import json
 import subprocess
 from typing import Any, Dict
 

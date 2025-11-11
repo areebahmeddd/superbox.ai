@@ -1,5 +1,3 @@
-"""Server Management Routes"""
-
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException

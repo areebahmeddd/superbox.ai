@@ -1,5 +1,3 @@
-"""S3 utilities for MCP Box (per-MCP file storage)"""
-
 import json
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional, Tuple
@@ -111,7 +109,6 @@ def upsert_server(bucket_name: str, server_name: str, server_data: Dict[str, Any
             server_data["meta"]["created_at"] = datetime.now(timezone.utc).isoformat()
 
     server_data["meta"]["updated_at"] = datetime.now(timezone.utc).isoformat()
-
     return save_server(bucket_name, server_name, server_data)
 
 

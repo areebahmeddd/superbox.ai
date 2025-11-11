@@ -1,5 +1,3 @@
-"""Initialize mcpbox.json configuration"""
-
 import sys
 import json
 import click
