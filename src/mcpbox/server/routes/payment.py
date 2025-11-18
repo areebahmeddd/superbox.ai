@@ -41,7 +41,6 @@ async def create_order(request: CreateOrderRequest) -> JSONResponse:
                 "key_id": _cfg.RAZORPAY_KEY_ID,
             }
         )
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error creating order: {str(e)}")
 
@@ -69,7 +68,6 @@ async def verify_payment(request: VerifyPaymentRequest) -> JSONResponse:
             )
         else:
             raise HTTPException(status_code=400, detail="Invalid payment signature")
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error verifying payment: {str(e)}")
 
@@ -94,6 +92,5 @@ async def get_status(payment_id: str) -> JSONResponse:
                 },
             }
         )
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching payment status: {str(e)}")

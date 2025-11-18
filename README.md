@@ -47,7 +47,7 @@ For setup and deployment, see [docs/INSTALL.md](docs/INSTALL.md).
 ├── pyproject.toml              # Project metadata & extras
 ├── Dockerfile                  # Server container
 ├── docker-compose.yaml         # Optional local stack
-└── tests/                      # Tests (placeholder)
+└── tests/                      # PyTests
 ```
 
 ##
@@ -63,6 +63,22 @@ Base path: `/api/v1`
   - `POST /servers` – create a server (see schemas in `mcpbox.shared.models`)
   - `PUT /servers/{name}` – update an existing server (partial updates supported)
   - `DELETE /servers/{name}` – remove a server from the registry
+
+- **Authentication**
+
+  - `POST /auth/register` – register a new user account
+  - `POST /auth/login` – login with email/password
+  - `POST /auth/login/provider` – login with OAuth provider (Google/GitHub)
+  - `POST /auth/refresh` – refresh authentication token
+  - `GET /auth/me` – get current user profile
+  - `PATCH /auth/me` – update user profile
+  - `DELETE /auth/me` – delete user account
+  - `POST /auth/device/start` – start OAuth device code flow
+  - `POST /auth/device/poll` – poll for device authorization status
+  - `GET /auth/device` – device code verification page
+  - `POST /auth/device` – submit device code for verification
+  - `GET /auth/device/callback/google` – Google OAuth callback
+  - `GET /auth/device/callback/github` – GitHub OAuth callback
 
 - **Payment**
 
@@ -107,6 +123,162 @@ Version: 1.0.0
 Description: My awesome MCP server
 ...
 ```
+
+### `mcpbox auth`
+
+Authenticate with the MCP Box registry using Firebase authentication. Supports email/password, Google OAuth, and GitHub OAuth.
+
+#### `mcpbox auth register`
+
+Create a new MCP Box account.
+
+**Usage:**
+
+```bash
+mcpbox auth register
+```
+
+**What it does:**
+
+- Prompts for email and password
+- Creates a new Firebase account
+- Automatically logs you in after registration
+- Stores authentication tokens in `~/.mcpbox/auth.json`
+
+**Example:**
+
+```bash
+$ mcpbox auth register
+Email: user@example.com
+Password: ********
+✓ Successfully registered and logged in
+```
+
+#### `mcpbox auth login`
+
+Log in to your MCP Box account.
+
+**Usage:**
+
+```bash
+mcpbox auth login [--provider PROVIDER] [--email EMAIL] [--password PASSWORD]
+```
+
+**Options:**
+
+- `--provider PROVIDER` – Authentication provider: `email`, `google`, or `github` (default: `email`)
+- `--email EMAIL` – Email address (for email provider only)
+- `--password PASSWORD` – Password (for email provider only)
+
+**What it does:**
+
+- **Email/Password**: Prompts for credentials and authenticates via Firebase
+- **Google/GitHub**: Opens browser for OAuth device code flow
+  - Displays a device code
+  - Opens verification page in browser
+  - Waits for you to complete OAuth authorization
+  - Automatically detects completion and stores tokens
+
+**Example (Email):**
+
+```bash
+$ mcpbox auth login --provider email
+Email: user@example.com
+Password: ********
+✓ Successfully logged in
+```
+
+**Example (Google OAuth):**
+
+```bash
+$ mcpbox auth login --provider google
+Opening browser for Google authentication...
+Visit this URL: http://localhost:8000/api/v1/auth/device?code=XXXX-XXXX
+Or enter code: XXXX-XXXX
+Waiting for authentication...
+✓ Successfully authenticated with Google
+```
+
+**Example (GitHub OAuth):**
+
+```bash
+$ mcpbox auth login --provider github
+Opening browser for GitHub authentication...
+Visit this URL: http://localhost:8000/api/v1/auth/device?code=XXXX-XXXX
+Or enter code: XXXX-XXXX
+Waiting for authentication...
+✓ Successfully authenticated with GitHub
+```
+
+#### `mcpbox auth status`
+
+Check your current authentication status.
+
+**Usage:**
+
+```bash
+mcpbox auth status
+```
+
+**What it does:**
+
+- Displays your logged-in email
+- Shows authentication provider (email/google/github)
+- Verifies token validity
+
+**Example:**
+
+```bash
+$ mcpbox auth status
+Logged in as: user@example.com
+Provider: google
+```
+
+#### `mcpbox auth refresh`
+
+Manually refresh your authentication token.
+
+**Usage:**
+
+```bash
+mcpbox auth refresh
+```
+
+**What it does:**
+
+- Uses stored refresh token to get a new ID token
+- Updates authentication file with new tokens
+
+**Example:**
+
+```bash
+$ mcpbox auth refresh
+✓ Token refreshed successfully
+```
+
+#### `mcpbox auth logout`
+
+Log out from your current session.
+
+**Usage:**
+
+```bash
+mcpbox auth logout
+```
+
+**What it does:**
+
+- Removes authentication tokens from `~/.mcpbox/auth.json`
+- Clears current session
+
+**Example:**
+
+```bash
+$ mcpbox auth logout
+✓ Logged out successfully
+```
+
+> **Note:** Authentication is required for `mcpbox push` and other operations that modify the registry.
 
 ### `mcpbox push`
 

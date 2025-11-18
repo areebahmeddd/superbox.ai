@@ -84,7 +84,6 @@ def scan_package(repo_path: str) -> Dict[str, Any]:
             tools = [tool.get("name") for tool in data["mcp"]["tools"] if "name" in tool]
 
         return {"tool_count": len(tools), "tool_names": sorted(tools)}
-
     except Exception:
         return {"tool_count": 0, "tool_names": []}
 
@@ -102,7 +101,6 @@ def clone_repo(repo_url: str, target_dir: str) -> Optional[str]:
         if result.returncode != 0:
             return None
         return str(repo_path)
-
     except Exception:
         return None
 

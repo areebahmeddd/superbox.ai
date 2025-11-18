@@ -1,12 +1,12 @@
-import json
 import os
-import shutil
-import subprocess
 import sys
+import json
+import shutil
+import zipfile
 import tempfile
+import subprocess
 import urllib.parse
 import urllib.request
-import zipfile
 
 import boto3
 
@@ -71,7 +71,6 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             },
             "body": mcp_response,
         }
-
     except Exception as e:
         print(f"Error: {str(e)}")
 
@@ -144,7 +143,6 @@ def clone_repo(repo_url: str, mcp_name: str) -> str:
         os.remove(zip_path)
 
         return repo_dir
-
     except Exception as e:
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir, ignore_errors=True)
@@ -185,7 +183,6 @@ def install_deps(repo_dir: str) -> None:
 
         if result.returncode != 0:
             print("Warning: pip install returned non-zero status")
-
     except subprocess.TimeoutExpired:
         print("Warning: pip install timed out")
     except Exception as e:
@@ -231,7 +228,6 @@ def run_server(repo_dir: str, entrypoint: str, lang: str, request_body: str) -> 
             print(f"MCP server stderr: {stderr.decode('utf-8')[:200]}")
 
         return response
-
     except subprocess.TimeoutExpired:
         process.kill()
         raise Exception("MCP server execution timed out after 30 seconds")

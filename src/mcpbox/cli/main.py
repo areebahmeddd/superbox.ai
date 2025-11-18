@@ -1,6 +1,7 @@
 import click
 
 from mcpbox.cli.commands.init import init
+from mcpbox.cli.commands.auth import auth
 from mcpbox.cli.commands.push import push
 from mcpbox.cli.commands.pull import pull
 from mcpbox.cli.commands.run import run
@@ -18,6 +19,7 @@ def cli():
 
 # Register commands
 cli.add_command(init)
+cli.add_command(auth)
 cli.add_command(push)
 cli.add_command(pull)
 cli.add_command(run)

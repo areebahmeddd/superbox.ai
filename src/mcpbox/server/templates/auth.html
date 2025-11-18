@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MCP Box Device Authentication</title>
+    <style>
+      :root {
+        --bg: #000000;
+        --card: rgba(18, 18, 18, 0.92);
+        --border: rgba(255, 255, 255, 0.08);
+        --text: #ffffff;
+        --muted: rgba(255, 255, 255, 0.58);
+        --accent: #ff5252;
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      .card {
+        background: var(--card);
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        padding: 32px;
+        width: min(440px, 94vw);
+        box-shadow: 0 16px 38px rgba(0, 0, 0, 0.45);
+      }
+
+      h1 {
+        font-size: 26px;
+        margin-bottom: 8px;
+      }
+
+      p.message {
+        color: var(--muted);
+        font-size: 15px;
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+
+      p.message.error {
+        color: #f87171;
+      }
+
+      form {
+        display: grid;
+        gap: 18px;
+      }
+
+      label {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+
+      input[type="text"] {
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(2, 6, 23, 0.6);
+        color: var(--text);
+        font-size: 16px;
+      }
+
+      input[type="text"]:focus {
+        outline: none;
+        border-color: rgba(255, 82, 82, 0.65);
+        box-shadow: 0 0 0 3px rgba(255, 82, 82, 0.2);
+      }
+
+      .btn {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 18px;
+        border-radius: 999px;
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #000;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px rgba(255, 82, 82, 0.28);
+      }
+
+      .status {
+        display: grid;
+        gap: 12px;
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(255, 82, 82, 0.15);
+        border: 1px solid rgba(255, 82, 82, 0.35);
+        color: #ffc6c6;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Device Authentication</h1>
+      <p class="message{% if error %} error{% endif %}">{{ message }}</p>
+
+      {% if show_form %}
+      <form method="post">
+        <div>
+          <label for="code">Device code</label>
+          <input
+            type="text"
+            id="code"
+            name="code"
+            value="{{ code }}"
+            autocomplete="one-time-code"
+            inputmode="latin"
+            spellcheck="false"
+            required
+            autofocus
+          />
+        </div>
+        <button class="btn" type="submit">Continue</button>
+      </form>
+      {% else %}
+      <div class="status">
+        <span class="status-badge">✓ Authenticated</span>
+        <p class="message">
+          You can return to the CLI window to finish signing in.
+        </p>
+      </div>
+      {% endif %}
+    </main>
+  </body>
+</html>

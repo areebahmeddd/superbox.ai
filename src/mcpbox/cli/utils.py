@@ -1,9 +1,8 @@
+import os
+import platform
 from pathlib import Path
 from datetime import datetime
 from typing import Any, Dict
-
-import os
-import platform
 
 import click
 

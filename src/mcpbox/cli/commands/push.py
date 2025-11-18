@@ -3,14 +3,56 @@ import json
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Optional
 
 import click
+import requests
 
 from mcpbox.cli.scanners import bandit, ggshield, sonarqube
 from mcpbox.cli.scanners import discovery as tool_discovery
 from mcpbox.cli.utils import build_report, show_summary
 from mcpbox.shared import s3
 from mcpbox.shared.config import Config, load_env
+
+AUTH_FILE = Path.home() / ".mcpbox" / "auth.json"
+IDENTITY_BASE_URL = "https://identitytoolkit.googleapis.com/v1"
+
+
+def _read_auth() -> Optional[dict]:
+    if not AUTH_FILE.exists():
+        return None
+    try:
+        with open(AUTH_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+def _identity_url(endpoint: str, api_key: str) -> str:
+    return f"{IDENTITY_BASE_URL}/{endpoint}?key={api_key}"
+
+
+def _check_auth(cfg: Config) -> None:
+    tokens = _read_auth()
+    if not tokens or not tokens.get("id_token"):
+        click.echo("Error: Authentication required to push servers to the registry.")
+        click.echo("Please login first using: mcpbox auth login")
+        sys.exit(1)
+
+    try:
+        response = requests.post(
+            _identity_url("accounts:lookup", cfg.FIREBASE_API_KEY),
+            json={"idToken": tokens.get("id_token")},
+            timeout=30,
+        )
+        if response.status_code != 200 or not response.json().get("users"):
+            click.echo("Error: Authentication token is invalid or expired.")
+            click.echo("Please login again using: mcpbox auth login")
+            sys.exit(1)
+    except Exception:
+        click.echo("Error: Failed to verify authentication.")
+        click.echo("Please login again using: mcpbox auth login")
+        sys.exit(1)
 
 
 @click.command()
@@ -44,6 +86,7 @@ def push(
 
         load_env(env_path)
         cfg = Config()
+        _check_auth(cfg)
 
         bucket = cfg.S3_BUCKET_NAME
 
@@ -57,7 +100,6 @@ def push(
                     sys.exit(0)
                 if force:
                     click.echo("Force flag set, will overwrite existing server")
-
         except Exception as e:
             click.echo(f"Warning: Could not check S3 bucket: {str(e)}")
             if not click.confirm("Continue anyway?"):
@@ -142,11 +184,9 @@ def push(
             s3.upsert_server(bucket, name, server_data)
 
             click.echo("Push complete")
-
         except Exception as e:
             click.echo(f"\nError: {e}")
             sys.exit(1)
-
     except Exception as e:
         click.echo(f"\nError: {str(e)}")
         sys.exit(1)

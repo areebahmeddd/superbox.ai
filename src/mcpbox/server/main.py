@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 
-from mcpbox.server.routes import servers_router, payment_router
+from mcpbox.server.routes import auth_router, servers_router, payment_router
 from mcpbox.shared.config import Config
 from mcpbox.shared.config import ServerConfig, load_env
 from mcpbox.shared.s3 import s3_client
@@ -18,6 +18,7 @@ app = FastAPI(**settings)
 cors = _server_cfg.cors_params()
 app.add_middleware(CORSMiddleware, **cors)
 
+app.include_router(auth_router, prefix="/api/v1/auth")
 app.include_router(servers_router, prefix="/api/v1/servers")
 app.include_router(payment_router, prefix="/api/v1/payment")
 

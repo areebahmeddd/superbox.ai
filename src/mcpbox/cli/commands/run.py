@@ -59,7 +59,6 @@ def run(name: str) -> None:
                 click.echo(json.dumps(parsed, indent=2))
             except Exception:
                 click.echo(body_text)
-
     except Exception as e:
         click.echo(f"\nError: {str(e)}")
         sys.exit(1)

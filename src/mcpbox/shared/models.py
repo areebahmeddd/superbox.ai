@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 # Core Entities
@@ -49,9 +49,9 @@ class MCPServer(BaseModel):
     meta: Optional[Meta] = None
 
 
-# API Requests - Server
+# Server API Models
 class CreateServerRequest(BaseModel):
-    """Request model for creating a new MCP server"""
+    """Request payload for creating an MCP server"""
 
     name: str
     version: str
@@ -66,7 +66,7 @@ class CreateServerRequest(BaseModel):
 
 
 class UpdateServerRequest(BaseModel):
-    """Request model for updating an MCP server"""
+    """Request payload for updating an MCP server"""
 
     name: Optional[str] = None
     version: Optional[str] = None
@@ -81,9 +81,78 @@ class UpdateServerRequest(BaseModel):
     security_report: Optional[dict] = None
 
 
-# API Requests - Payment
+# Auth API Models
+class AuthRegisterRequest(BaseModel):
+    """Request payload for registering a new user"""
+
+    email: EmailStr
+    password: str
+    display_name: Optional[str] = None
+
+
+class AuthLoginRequest(BaseModel):
+    """Request payload for logging in a user"""
+
+    email: EmailStr
+    password: str
+
+
+class AuthProviderRequest(BaseModel):
+    """Request payload for logging in via OAuth providers"""
+
+    provider: str
+    id_token: Optional[str] = None
+    access_token: Optional[str] = None
+
+
+class AuthDeviceStartRequest(BaseModel):
+    """Request payload to initiate an OAuth device login"""
+
+    provider: str
+
+
+class AuthDevicePollRequest(BaseModel):
+    """Request payload for polling device login status"""
+
+    device_code: str
+
+
+class AuthRefreshRequest(BaseModel):
+    """Request payload for refreshing an ID token"""
+
+    refresh_token: str
+
+
+class AuthUpdateRequest(BaseModel):
+    """Request payload for updating user profile details"""
+
+    display_name: Optional[str] = None
+    password: Optional[str] = None
+
+
+class AuthResponse(BaseModel):
+    """Response payload returned after authentication operations"""
+
+    id_token: str
+    refresh_token: str
+    expires_in: int
+    email: Optional[str] = None
+    local_id: Optional[str] = None
+
+
+class AuthUserProfile(BaseModel):
+    """Response payload for user profile lookup"""
+
+    email: Optional[str] = None
+    local_id: str
+    display_name: Optional[str] = None
+    email_verified: bool = False
+    disabled: bool = False
+
+
+# Payment API Models
 class CreateOrderRequest(BaseModel):
-    """Request model for creating a payment order"""
+    """Request payload for creating a Razorpay order"""
 
     server_name: str
     amount: float
@@ -91,7 +160,7 @@ class CreateOrderRequest(BaseModel):
 
 
 class VerifyPaymentRequest(BaseModel):
-    """Request model for verifying a payment"""
+    """Request payload for verifying a Razorpay payment"""
 
     razorpay_order_id: str
     razorpay_payment_id: str

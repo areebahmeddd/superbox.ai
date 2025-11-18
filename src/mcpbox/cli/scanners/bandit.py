@@ -87,7 +87,6 @@ def run_scan(repo_path: str) -> Dict[str, Any]:
                 "severity_counts": {"high": 0, "medium": 0, "low": 0},
                 "issues": [],
             }
-
     except subprocess.TimeoutExpired:
         print("[Bandit] Scanner timeout")
         return {

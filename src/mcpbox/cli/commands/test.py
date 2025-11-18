@@ -120,7 +120,6 @@ def test(url: str, client: str, entrypoint: str, lang: str) -> None:
         click.echo(f"Repository: {url}")
         click.echo(f"Test URL: {test_url}")
         click.echo(f"\nLocation: {path}")
-
     except Exception as e:
         click.echo(f"\nError: {str(e)}")
         sys.exit(1)

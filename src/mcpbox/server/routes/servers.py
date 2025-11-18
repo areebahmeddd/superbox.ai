@@ -28,7 +28,6 @@ async def get_server(server_name: str) -> JSONResponse:
             raise HTTPException(status_code=404, detail=f"Server '{server_name}' not found")
 
         return JSONResponse(content={"status": "success", "server": server})
-
     except HTTPException:
         raise
     except Exception as e:
@@ -73,7 +72,6 @@ async def list_servers() -> JSONResponse:
         return JSONResponse(
             content={"status": "success", "total": len(server_list), "servers": server_list}
         )
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching servers: {str(e)}")
 
@@ -115,7 +113,6 @@ async def create_server(server: CreateServerRequest) -> JSONResponse:
             content={"status": "success", "message": "Server created", "server": new_server},
             status_code=201,
         )
-
     except HTTPException:
         raise
     except Exception as e:
@@ -182,7 +179,6 @@ async def update_server(server_name: str, updates: UpdateServerRequest) -> JSONR
                 "server": updated_data,
             }
         )
-
     except HTTPException:
         raise
     except Exception as e:
@@ -207,7 +203,6 @@ async def delete_server(server_name: str) -> JSONResponse:
                 "message": f"Server '{server_name}' deleted successfully",
             }
         )
-
     except HTTPException:
         raise
     except Exception as e:

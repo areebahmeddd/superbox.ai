@@ -9,12 +9,25 @@ class Config:
     """Configuration class for MCP Box"""
 
     def __init__(self) -> None:
+        # API Configuration
+        self.MCPBOX_API_URL = get_env("MCPBOX_API_URL")
+
         # AWS Configurations
         self.AWS_REGION = get_env("AWS_REGION")
         self.AWS_ACCESS_KEY_ID = get_env("AWS_ACCESS_KEY_ID")
         self.AWS_SECRET_ACCESS_KEY = get_env("AWS_SECRET_ACCESS_KEY")
         self.S3_BUCKET_NAME = get_env("S3_BUCKET_NAME")
         self.LAMBDA_BASE_URL = get_env("LAMBDA_BASE_URL")
+
+        # Firebase Configuration
+        self.FIREBASE_API_KEY = get_env("FIREBASE_API_KEY")
+        self.FIREBASE_PROJECT_ID = get_env("FIREBASE_PROJECT_ID")
+
+        # OAuth Configurations
+        self.GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+        self.GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+        self.GITHUB_CLIENT_ID = os.environ.get("GITHUB_CLIENT_ID")
+        self.GITHUB_CLIENT_SECRET = os.environ.get("GITHUB_CLIENT_SECRET")
 
         # Scanners Configurations
         self.SONAR_TOKEN = get_env("SONAR_TOKEN")
@@ -28,11 +41,14 @@ class Config:
     def validate_server(self) -> bool:
         """Validate required configuration for server"""
         required = {
+            "MCPBOX_API_URL": self.MCPBOX_API_URL,
             "AWS_REGION": self.AWS_REGION,
             "AWS_ACCESS_KEY_ID": self.AWS_ACCESS_KEY_ID,
             "AWS_SECRET_ACCESS_KEY": self.AWS_SECRET_ACCESS_KEY,
             "S3_BUCKET_NAME": self.S3_BUCKET_NAME,
             "LAMBDA_BASE_URL": self.LAMBDA_BASE_URL,
+            "FIREBASE_API_KEY": self.FIREBASE_API_KEY,
+            "FIREBASE_PROJECT_ID": self.FIREBASE_PROJECT_ID,
             "RAZORPAY_KEY_ID": self.RAZORPAY_KEY_ID,
             "RAZORPAY_KEY_SECRET": self.RAZORPAY_KEY_SECRET,
         }
@@ -44,10 +60,13 @@ class Config:
     def validate_cli(self) -> bool:
         """Validate required configuration for CLI"""
         required = {
+            "MCPBOX_API_URL": self.MCPBOX_API_URL,
             "AWS_REGION": self.AWS_REGION,
             "AWS_ACCESS_KEY_ID": self.AWS_ACCESS_KEY_ID,
             "AWS_SECRET_ACCESS_KEY": self.AWS_SECRET_ACCESS_KEY,
             "S3_BUCKET_NAME": self.S3_BUCKET_NAME,
+            "FIREBASE_API_KEY": self.FIREBASE_API_KEY,
+            "FIREBASE_PROJECT_ID": self.FIREBASE_PROJECT_ID,
             "SONAR_TOKEN": self.SONAR_TOKEN,
             "SONAR_ORGANIZATION": self.SONAR_ORGANIZATION,
             "GITGUARDIAN_API_KEY": self.GITGUARDIAN_API_KEY,

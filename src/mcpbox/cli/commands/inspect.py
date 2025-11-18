@@ -47,7 +47,6 @@ def inspect(name: str) -> None:
             click.echo(repo_url)
         else:
             click.echo("Done.")
-
     except Exception as e:
         click.echo(f"\nError: {str(e)}")
         sys.exit(1)

@@ -103,7 +103,6 @@ def pull(name: str, client: str) -> None:
         click.echo(f"\nServer '{name}' added to {display_target} MCP config")
         click.echo(f"URL: {server_url}")
         click.echo(f"\nLocation: {path}")
-
     except Exception as e:
         click.echo(f"\nError: {str(e)}")
         sys.exit(1)

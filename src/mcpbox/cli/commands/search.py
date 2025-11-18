@@ -50,7 +50,6 @@ def search() -> None:
                     click.echo(f"   Security: {total_issues} issues found")
 
         click.echo("\n" + "=" * 70 + "\n")
-
     except Exception as e:
         click.echo(f"\nError: {str(e)}")
         sys.exit(1)

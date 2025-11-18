@@ -49,7 +49,6 @@ def run_scan(path_to_scan: str) -> Dict[str, Any]:
         }
         print("[GGShield] Scan complete")
         return result_dict
-
     except subprocess.TimeoutExpired:
         print("[GGShield] Scanner timeout")
         return {"success": False, "error": "Scanner timeout", "total_secrets": 0, "secrets": []}
